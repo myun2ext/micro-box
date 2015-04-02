@@ -2,12 +2,17 @@
 #define __MYUN2__GITHUB__MICRO_BOX__MACHINE__HPP__
 
 #include <memory.h>
+#include <stdio.h>
 
 template <typename T>
 struct heap_allocator
 {
 	T* ptr;
-	void allocate(unsigned long size) { ptr = new T[size]; }
+	unsigned long size;
+	void allocate(unsigned long allocate_size) {
+		ptr = new T[allocate_size];
+		size = allocate_size;
+	}
 	void deallocate() { delete[] ptr; }
 
 	T& operator [](unsigned long n) { return ptr[n]; }
@@ -15,6 +20,12 @@ struct heap_allocator
 
 	size_t write(const T* from_ptr, unsigned long write_address, unsigned long length) {
 		memcpy(ptr + write_address, from_ptr, length);
+	}
+	bool save_to_file(const char* filename) const
+	{
+		FILE* fp = fopen(filename, "w+b");
+		if ( fp == NULL ) return false;
+		return fwrite(ptr, sizeof(T), size, fp) == (size * sizeof(T));
 	}
 };
 
