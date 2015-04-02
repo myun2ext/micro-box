@@ -1,6 +1,8 @@
 #ifndef __MYUN2__GITHUB__MICRO_BOX__MACHINE__HPP__
 #define __MYUN2__GITHUB__MICRO_BOX__MACHINE__HPP__
 
+#include <memory.h>
+
 template <typename T>
 struct heap_allocator
 {
@@ -10,6 +12,10 @@ struct heap_allocator
 
 	T& operator [](unsigned long n) { return ptr[n]; }
 	const T& operator [](unsigned long n) const { return ptr[n]; }
+
+	size_t write(const T* from_ptr, unsigned long write_address, unsigned long length) {
+		memcpy(ptr + write_address, from_ptr, length);
+	}
 };
 
 struct spec_on_standard_system
